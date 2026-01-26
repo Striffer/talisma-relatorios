@@ -1,0 +1,7 @@
+{
+  "name": "Gerador de Relatório Fotográfico - Talismã",
+  "description": "Sistema para extração de dados de ofícios (.docx) e planilhas de medição (.xlsx) para geração automatizada de relatórios fotográficos com upload de imagens por item.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
