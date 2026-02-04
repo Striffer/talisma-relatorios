@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useRef } from 'react';
 import { 
   FileText, 
@@ -357,7 +356,11 @@ const App: React.FC = () => {
 
       for (let i = 0; i < reportRows.length; i++) {
         const row = reportRows[i];
-        const itemPhotos = photos[row.child.b] || [];
+        
+        // --- CORREÇÃO 1: Usar chave composta para buscar as fotos no loop de geração ---
+        const uniqueKey = `${row.child.a}-${row.child.b}`;
+        const itemPhotos = photos[uniqueKey] || [];
+        // ----------------------------------------------------------------------------
         
         if (row.grandparent) {
           const currentGpKey = `${row.grandparent.a}|${row.grandparent.b}`;
@@ -514,7 +517,7 @@ const App: React.FC = () => {
             <button
               onClick={handleDownload}
               disabled={!docData || !reportRows.length || loading}
-              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg active:scale-95"
+              className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-50 disabled:bg-slate-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg active:scale-95"
             >
               {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
               Gerar Relatório
@@ -635,12 +638,15 @@ const App: React.FC = () => {
                   >
                     <option value="">Selecione um item para fotos</option>
                     {filteredItems.map(item => {
-                      const count = photos[item.b]?.length || 0;
+                      // --- CORREÇÃO 2: Usar chave composta para garantir unicidade no Select ---
+                      const uniqueKey = `${item.a}-${item.b}`;
+                      const count = photos[uniqueKey]?.length || 0;
                       return (
-                        <option key={`${item.a}-${item.b}`} value={item.b}>
+                        <option key={uniqueKey} value={uniqueKey}>
                           {count > 0 ? '✔️ ' : ''}{item.a} {item.b} - {item.c.substring(0, 50)}... {count > 0 ? `(${count})` : ''}
                         </option>
                       );
+                      // -----------------------------------------------------------------------
                     })}
                   </select>
                   <label className={`block w-full text-center py-3 rounded-xl text-xs font-bold uppercase cursor-pointer ${
